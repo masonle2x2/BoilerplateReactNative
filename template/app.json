@@ -1,9 +1,32 @@
 {
-  "name": "HelloWorld",
-  "displayName": "HelloWorld",
   "expo": {
-    "name": "HelloWorld",
-    "slug": "HelloWorld",
-    "platforms": ["android", "ios"]
+    "name": "Helloworld",
+    "slug": "helloworld",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "scheme": "Helloworld",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.helloworld"
+    },
+    "android": {
+      "package": "com.helloworld"
+    },
+    "plugins": [
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ],
+      "react-native-keys",
+      "expo-font"
+    ]
   }
 }

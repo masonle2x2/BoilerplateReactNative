@@ -3,12 +3,11 @@ import { createRef } from 'react';
 
 import { API_CONFIG } from '@common/constant';
 import { logout } from '@common/method';
-import { translate } from '@utils/i18n/translate';
 import { AxiosError, AxiosResponse, Method } from 'axios';
 
 const responseDefault: ResponseBase<Record<string, unknown>> = {
   code: -500,
-  msg: translate('error:have_error'),
+  msg: 'error:have_error',
   status: false,
 };
 
@@ -65,18 +64,18 @@ const handleErrorApi = (status: number) => {
   const result = { code: status, msg: '', status: false };
 
   if (status > 505) {
-    result.msg = translate('error:server_error');
+    result.msg = 'error:server_error';
 
     return result;
   }
 
   if (status < 500 && status >= 418) {
-    result.msg = translate('error:error_on_request');
+    result.msg = 'error:error_on_request';
 
     return result;
   }
 
-  result.msg = translate(('error:' + status) as I18nKeys);
+  result.msg = ('error:' + status) as I18nKeys;
 
   return result;
 };

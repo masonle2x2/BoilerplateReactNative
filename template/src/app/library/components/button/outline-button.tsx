@@ -1,6 +1,7 @@
 import React from 'react';
 import { ImageProps, TouchableWithoutFeedback } from 'react-native';
 
+import { useTranslation } from 'react-i18next';
 import {
   useAnimatedProps,
   useAnimatedStyle,
@@ -9,7 +10,6 @@ import {
 import { useStyles } from 'react-native-unistyles';
 
 import { AnimatedIcon } from '@components/icon';
-import { useTranslation } from '@hooks';
 import { AnimatedText, View } from '@rn-core';
 
 import { useThrottle } from './hook';
@@ -36,7 +36,7 @@ export const OutlineButton = ({
     theme: { color },
   } = useStyles(buttonStyleSheet);
 
-  const t = useTranslation();
+  const [t] = useTranslation();
 
   const [
     ,

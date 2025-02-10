@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export enum APP_SCREEN {
@@ -17,3 +18,9 @@ export type RootStackParamList = {
 
 export type StackScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}

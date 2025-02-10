@@ -17,7 +17,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { sharedTiming, sharePause } from '@animated';
-import { VectorIcon, VIconName } from '@components/vector-icon';
 import { useErrorMessageTranslation } from '@hooks';
 import { AnimatedView, Text } from '@rn-core';
 
@@ -46,23 +45,6 @@ const getColor = (typeMessage: TypeMessage): string => {
 
     default:
       return BG_SUCCESS;
-  }
-};
-
-const getIcon = (typeMessage: TypeMessage): VIconName => {
-  switch (typeMessage) {
-    case TYPE_MESSAGE.SUCCESS:
-      return 'tick_square';
-
-    case TYPE_MESSAGE.LINK:
-    case TYPE_MESSAGE.WARN:
-      return 'info_circle';
-
-    case TYPE_MESSAGE.ERROR:
-      return 'danger';
-
-    default:
-      return 'info_circle';
   }
 };
 
@@ -191,7 +173,6 @@ export const SnackItem = memo(
           entering={CustomEnteringAnimation}
           exiting={CustomExitAnimation}
           style={[styles.itemBar, containStyle]}>
-          <VectorIcon icon={getIcon(item.type)} color="white" />
           <Spacer width={10} />
           <Text style={styles.text}>{message}</Text>
         </AnimatedView>

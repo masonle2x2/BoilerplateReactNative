@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 
+import { useTranslation } from 'react-i18next';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { useStyles } from 'react-native-unistyles';
 
 import { Icon } from '@components/icon';
-import { useTranslation } from '@hooks';
 import { AnimatedView, Text } from '@rn-core';
 import { Colors } from '@theme/index';
 
@@ -33,7 +33,7 @@ export const PrimaryButton = ({
     theme: { color },
   } = useStyles(buttonStyleSheet);
 
-  const t = useTranslation();
+  const [t] = useTranslation();
 
   const [
     ,

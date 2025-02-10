@@ -15,10 +15,9 @@ import {
   Platform,
 } from 'react-native';
 
-import { useTranslation as useRNTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
-import { TOptions } from 'i18next';
 
 type NetInfoTuple = [boolean, boolean];
 function useNetWorkStatus(): NetInfoTuple {
@@ -171,7 +170,7 @@ function useMounted(callback: () => void, deps: any[] = []) {
 }
 
 function useErrorMessageTranslation(msg?: string) {
-  const [t] = useRNTranslation();
+  const [t] = useTranslation();
 
   const parsed = useMemo<ValidateMessageObject | undefined>(() => {
     if (!msg) {
@@ -187,7 +186,7 @@ function useErrorMessageTranslation(msg?: string) {
 
   return useMemo<string | undefined>(() => {
     if (!parsed && typeof msg === 'string') {
-      return t(msg as I18nKeys);
+      return t(msg as any);
     }
 
     if (!parsed) {
@@ -198,7 +197,11 @@ function useErrorMessageTranslation(msg?: string) {
 
     if (parsed.optionsTx) {
       Object.keys(parsed.optionsTx).forEach(key => {
-        optionsTx[key] = t(String((parsed.optionsTx as TOptions)[key]) as any);
+        optionsTx[key] = t(
+          String(
+            (parsed.optionsTx as Record<string, string | number>)[key],
+          ) as any,
+        );
       });
     }
 
@@ -239,12 +242,6 @@ const useEventCallback = <Fn extends (...args: any[]) => ReturnType<Fn>>(
   return callbackMemoized;
 };
 
-const useTranslation = () => {
-  const [t] = useRNTranslation();
-
-  return t;
-};
-
 export {
   useDidMount,
   useDisableBackHandler,
@@ -256,6 +253,5 @@ export {
   useMounted,
   useNetWorkStatus,
   usePrevious,
-  useTranslation,
   useUnMount,
 };

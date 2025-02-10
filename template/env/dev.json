@@ -3,7 +3,6 @@
     "PRIVATE_KEY_STORAGE": "MIICXQIBAAKBgQDQ7TAgBmE3dBFNyukD4HfpzNq3Y5o4J0z4Z3Vxr8iOqCtJSVmaGyrR65dFg/p0ecJh3YF8q6fJb/O9aTwAtAsNlSdv6lcrAnrx4/PuzoK2tg4y852LKuqvRt3EnguExvO2auzdpoDtcKa9usM8C9u19XCxRe3RKKneV6b8opIzpwIDAQAB"
   },
   "public": {
-    "DEFAULT_FALLBACK_LNG_I18n": "en",
     "BUNDLE_IDENTIFIER": "com.helloworld",
     "VERSION_NAME": "1.0.0",
     "VERSION_CODE": "1",

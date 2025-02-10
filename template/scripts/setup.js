@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { execSync, spawnSync } = require('child_process');
 
-const { getAndroidHome, getRubyVersion } = require('./common');
+const { getAndroidHome } = require('./common');
 
 (function () {
   try {
@@ -20,18 +20,6 @@ const { getAndroidHome, getRubyVersion } = require('./common');
 
     if (process.platform === 'darwin') {
       execSync('cd ios && touch tmp.xcconfig');
-
-      if (getRubyVersion() < 276) {
-        console.log(
-          '                  🧐🧐🧐🧐🧐 Installing CocoaPods dependencies!! 🧐🧐🧐🧐🧐',
-        );
-
-        execSync('pod install --project-directory=ios', {
-          stdio: 'inherit',
-        });
-
-        console.log('                      ✨✨✨✨✨ Pod done!!! ✨✨✨✨✨');
-      } else {
         console.log(
           '                  🧐🧐🧐🧐🧐 Installing Bundle dependencies!! 🧐🧐🧐🧐🧐',
         );
@@ -54,7 +42,6 @@ const { getAndroidHome, getRubyVersion } = require('./common');
         );
 
         console.log('                      ✨✨✨✨✨ Pod done!!! ✨✨✨✨✨');
-      }
     }
   } catch {}
 })();

@@ -1,0 +1,250 @@
+diff --git a/node_modules/@expo/cli/build/src/run/android/runAndroidAsync.js b/node_modules/@expo/cli/build/src/run/android/runAndroidAsync.js
+index 50ea30e..5cf017e 100644
+--- a/node_modules/@expo/cli/build/src/run/android/runAndroidAsync.js
++++ b/node_modules/@expo/cli/build/src/run/android/runAndroidAsync.js
+@@ -84,7 +84,8 @@ async function runAndroidAsync(projectRoot, { install , ...options }) {
+         port: props.port,
+         // If a scheme is specified then use that instead of the package name.
+         scheme: (ref1 = await (0, _scheme.getSchemesForAndroidAsync)(projectRoot)) == null ? void 0 : ref1[0],
+-        headless: !props.shouldStartBundler
++        headless: !props.shouldStartBundler,
++        appId: options?.appId
+     });
+     if (options.binary) {
+         // Attempt to install the APK from the file path
+@@ -98,7 +99,7 @@ async function runAndroidAsync(projectRoot, { install , ...options }) {
+         await installAppAsync(androidProjectRoot, props);
+     }
+     await manager.getDefaultDevServer().openCustomRuntimeAsync("emulator", {
+-        applicationId: props.packageName,
++        applicationId: options?.appId ?? props.packageName,
+         customAppId: props.customAppId,
+         launchActivity: props.launchActivity
+     }, {
+diff --git a/node_modules/@expo/cli/build/src/run/ios/index.js b/node_modules/@expo/cli/build/src/run/ios/index.js
+index 31bf70b..b0f8ed2 100644
+--- a/node_modules/@expo/cli/build/src/run/ios/index.js
++++ b/node_modules/@expo/cli/build/src/run/ios/index.js
+@@ -75,6 +75,7 @@ const expoRunIos = async (argv)=>{
+         "--no-install": Boolean,
+         "--no-bundler": Boolean,
+         "--configuration": String,
++        "--app-id": String,
+         "--binary": String,
+         "--port": Number,
+         // Undocumented flag for re-bundling the app and assets for a build to try different JS code in release builds.
+@@ -96,6 +97,7 @@ const expoRunIos = async (argv)=>{
+             `--no-install                     Skip installing dependencies`,
+             `--no-bundler                     Skip starting the Metro bundler`,
+             `--scheme [scheme]                Scheme to build`,
++            `--app-id                          IOS bundle identifier`,
+             `--binary <path>                  Path to existing .app or .ipa to install.`,
+             (0, _chalk().default)`--configuration <configuration>  Xcode configuration to use. Debug or Release. {dim Default: Debug}`,
+             `-d, --device [device]            Device name or UDID to build the app on`,
+@@ -121,6 +123,7 @@ const expoRunIos = async (argv)=>{
+         install: !args["--no-install"],
+         bundler: !args["--no-bundler"],
+         port: args["--port"],
++        appId: args["--app-id"],
+         binary: args["--binary"],
+         rebundle: args["--unstable-rebundle"],
+         // Custom parsed args
+diff --git a/node_modules/@expo/cli/build/src/run/ios/launchApp.js b/node_modules/@expo/cli/build/src/run/ios/launchApp.js
+index b691586..f216088 100644
+--- a/node_modules/@expo/cli/build/src/run/ios/launchApp.js
++++ b/node_modules/@expo/cli/build/src/run/ios/launchApp.js
+@@ -79,7 +79,7 @@ function _interopRequireWildcard(obj, nodeInterop) {
+     return newObj;
+ }
+ async function launchAppAsync(binaryPath, manager, props, appId) {
+-    appId ??= (await (0, _profile.profile)(getLaunchInfoForBinaryAsync)(binaryPath)).bundleId;
++    appId ??= props?.appId ?? (await (0, _profile.profile)(getLaunchInfoForBinaryAsync)(binaryPath)).bundleId;
+     _log.Log.log(_chalk().default.gray`\u203A Installing ${binaryPath}`);
+     if (!props.isSimulator) {
+         if (props.device.osType === "macOS") {
+diff --git a/node_modules/@expo/cli/build/src/run/ios/runIosAsync.js b/node_modules/@expo/cli/build/src/run/ios/runIosAsync.js
+index 767d825..e012e40 100644
+--- a/node_modules/@expo/cli/build/src/run/ios/runIosAsync.js
++++ b/node_modules/@expo/cli/build/src/run/ios/runIosAsync.js
+@@ -199,13 +199,15 @@ async function runIosAsync(projectRoot, options) {
+         port: props.port,
+         headless: !props.shouldStartBundler,
+         // If a scheme is specified then use that instead of the package name.
+-        scheme: isCustomBinary ? launchInfo.schemes[0] : (ref = await (0, _scheme.getSchemesForIosAsync)(projectRoot)) == null ? void 0 : ref[0]
++        scheme: isCustomBinary ? launchInfo.schemes[0] : (ref = await (0, _scheme.getSchemesForIosAsync)(projectRoot)) == null ? void 0 : ref[0],
++        appId: options?.appId
+     });
+     // Install and launch the app binary on a device.
+     await (0, _launchApp.launchAppAsync)(binaryPath1, manager, {
+         isSimulator: props.isSimulator,
+         device: props.device,
+-        shouldStartBundler: props.shouldStartBundler
++        shouldStartBundler: props.shouldStartBundler,
++        appId: options?.appId
+     }, launchInfo.bundleId);
+     // Log the location of the JS logs for the device.
+     if (props.shouldStartBundler) {
+diff --git a/node_modules/@expo/cli/build/src/run/startBundler.js b/node_modules/@expo/cli/build/src/run/startBundler.js
+index 096bafb..bc37ada 100644
+--- a/node_modules/@expo/cli/build/src/run/startBundler.js
++++ b/node_modules/@expo/cli/build/src/run/startBundler.js
+@@ -69,7 +69,7 @@ function _interopRequireWildcard(obj, nodeInterop) {
+     }
+     return newObj;
+ }
+-async function startBundlerAsync(projectRoot, { port , headless , scheme  }) {
++async function startBundlerAsync(projectRoot, { port , headless , scheme, appId  }) {
+     const options = {
+         port,
+         headless,
+@@ -89,7 +89,8 @@ async function startBundlerAsync(projectRoot, { port , headless , scheme  }) {
+             skipPlugins: true
+         });
+         await (0, _startInterface.startInterfaceAsync)(devServerManager, {
+-            platforms: exp.platforms ?? []
++            platforms: exp.platforms ?? [],
++            appId
+         });
+     } else {
+         var ref;
+diff --git a/node_modules/@expo/cli/build/src/start/index.js b/node_modules/@expo/cli/build/src/start/index.js
+index ab0e558..584bd00 100644
+--- a/node_modules/@expo/cli/build/src/start/index.js
++++ b/node_modules/@expo/cli/build/src/start/index.js
+@@ -82,6 +82,7 @@ const expoStart = async (argv)=>{
+         "--localhost": Boolean,
+         "--offline": Boolean,
+         "--go": Boolean,
++        "--app-id": String,
+         // Aliases
+         "-h": "--help",
+         "-c": "--clear",
+@@ -119,6 +120,7 @@ const expoStart = async (argv)=>{
+             `--localhost                     Same as --host localhost`,
+             ``,
+             `--offline                       Skip network requests and use anonymous manifest signatures`,
++            `--app-id                       Android application id or ios bundle identifier`,
+             `--https                         Start the dev server with https protocol`,
+             `--scheme <scheme>               Custom URI protocol to use when launching an app`,
+             (0, _chalk().default)`-p, --port <number>             Port to start the dev server on (does not apply to web or tunnel). {dim Default: 8081}`,
+diff --git a/node_modules/@expo/cli/build/src/start/interface/interactiveActions.js b/node_modules/@expo/cli/build/src/start/interface/interactiveActions.js
+index 7941956..9672163 100644
+--- a/node_modules/@expo/cli/build/src/start/interface/interactiveActions.js
++++ b/node_modules/@expo/cli/build/src/start/interface/interactiveActions.js
+@@ -80,7 +80,7 @@ class DevServerManagerActions {
+             try {
+                 const nativeRuntimeUrl = devServer.getNativeRuntimeUrl();
+                 const interstitialPageUrl = devServer.getRedirectUrl();
+-                (0, _commandsTable.printQRCode)(interstitialPageUrl ?? nativeRuntimeUrl);
++                // (0, _commandsTable.printQRCode)(interstitialPageUrl ?? nativeRuntimeUrl);
+                 if (interstitialPageUrl) {
+                     _log.log((0, _commandsTable.printItem)((0, _chalk().default)`Choose an app to open your project at {underline ${interstitialPageUrl}}`));
+                 }
+@@ -91,12 +91,12 @@ class DevServerManagerActions {
+                     })}`);
+                 }
+                 _log.log((0, _commandsTable.printItem)((0, _chalk().default)`Metro waiting on {underline ${nativeRuntimeUrl}}`));
+-                if (options.devClient === false) {
+-                    // TODO: if development build, change this message!
+-                    _log.log((0, _commandsTable.printItem)("Scan the QR code above with Expo Go (Android) or the Camera app (iOS)"));
+-                } else {
+-                    _log.log((0, _commandsTable.printItem)("Scan the QR code above to open the project in a development build. " + (0, _link.learnMore)("https://expo.fyi/start")));
+-                }
++                // if (options.devClient === false) {
++                //     // TODO: if development build, change this message!
++                //     _log.log((0, _commandsTable.printItem)("Scan the QR code above with Expo Go (Android) or the Camera app (iOS)"));
++                // } else {
++                //     _log.log((0, _commandsTable.printItem)("Scan the QR code above to open the project in a development build. " + (0, _link.learnMore)("https://expo.fyi/start")));
++                // }
+             } catch (error) {
+                 console.log("err", error);
+                 // @ts-ignore: If there is no development build scheme, then skip the QR code.
+diff --git a/node_modules/@expo/cli/build/src/start/interface/startInterface.js b/node_modules/@expo/cli/build/src/start/interface/startInterface.js
+index 57d60cd..e262bda 100644
+--- a/node_modules/@expo/cli/build/src/start/interface/startInterface.js
++++ b/node_modules/@expo/cli/build/src/start/interface/startInterface.js
+@@ -173,7 +173,8 @@ async function startInterfaceAsync(devServerManager, options) {
+             } else {
+                 try {
+                     await server.openPlatformAsync(settings.launchTarget, {
+-                        shouldPrompt
++                        shouldPrompt,
++                        appId: options?.appId
+                     });
+                     (0, _commandsTable.printHelp)();
+                 } catch (error1) {
+diff --git a/node_modules/@expo/cli/build/src/start/platforms/android/AndroidPlatformManager.js b/node_modules/@expo/cli/build/src/start/platforms/android/AndroidPlatformManager.js
+index a23029e..88dcef7 100644
+--- a/node_modules/@expo/cli/build/src/start/platforms/android/AndroidPlatformManager.js
++++ b/node_modules/@expo/cli/build/src/start/platforms/android/AndroidPlatformManager.js
+@@ -22,6 +22,7 @@ class AndroidPlatformManager extends _platformManager.PlatformManager {
+             ...options,
+             resolveDeviceAsync: _androidDeviceManager.AndroidDeviceManager.resolveAsync
+         });
++        this.packageName = undefined
+         this.projectRoot = projectRoot;
+         this.port = port;
+         this.hasDevClientInstalled = (0, _fn.memoize)(_detectDevClient.hasDirectDevClientDependency.bind(this, projectRoot));
+@@ -69,7 +70,14 @@ class AndroidPlatformManager extends _platformManager.PlatformManager {
+             url: url ?? launchActivity
+         };
+     }
++    async updatePackageName() {
++        this.packageName = await this._getAppIdResolver().getAppIdFromNativeAsync()
++    }
+     _getAppIdResolver() {
++        if(this.packageName && this.packageName !== applicationId) {
++                // Run app with custom application Id
++                return (ref = props == null ? void 0 : props.launchActivity) != null ? ref : `${applicationId}/${this.packageName}.MainActivity`;
++        }
+         return new _androidAppIdResolver.AndroidAppIdResolver(this.projectRoot);
+     }
+     _resolveAlternativeLaunchUrl(applicationId, props) {
+diff --git a/node_modules/@expo/cli/build/src/start/resolveOptions.js b/node_modules/@expo/cli/build/src/start/resolveOptions.js
+index 9382df5..64780ec 100644
+--- a/node_modules/@expo/cli/build/src/start/resolveOptions.js
++++ b/node_modules/@expo/cli/build/src/start/resolveOptions.js
+@@ -69,6 +69,7 @@ async function resolveOptionsAsync(projectRoot, args) {
+         clear: !!args["--clear"],
+         dev: !args["--no-dev"],
+         https: !!args["--https"],
++        appId: args["--app-id"],
+         maxWorkers: args["--max-workers"],
+         port: args["--port"],
+         minify: !!args["--minify"],
+diff --git a/node_modules/@expo/cli/build/src/start/server/BundlerDevServer.js b/node_modules/@expo/cli/build/src/start/server/BundlerDevServer.js
+index 086c102..8f11169 100644
+--- a/node_modules/@expo/cli/build/src/start/server/BundlerDevServer.js
++++ b/node_modules/@expo/cli/build/src/start/server/BundlerDevServer.js
+@@ -326,8 +326,10 @@ class BundlerDevServer {
+         }
+         const runtime = this.isTargetingNative() ? this.isDevClient ? "custom" : "expo" : "web";
+         const manager = await this.getPlatformManagerAsync(launchTarget);
++        const props = resolver?.appId ? { applicationId : resolver?.appId, packageName: resolver?.packageName  } : undefined
+         return manager.openAsync({
+-            runtime
++            runtime,
++            props
+         }, resolver);
+     }
+     /** Open the dev server in a runtime. */ async openCustomRuntimeAsync(launchTarget, launchProps = {}, resolver = {}) {
+@@ -380,6 +382,7 @@ class BundlerDevServer {
+                     hostType: "localhost"
+                 })
+             });
++            await this.platformManagers[platform]?.updatePackageName?.();
+         }
+         return this.platformManagers[platform];
+     }
+diff --git a/node_modules/@expo/cli/build/src/start/startAsync.js b/node_modules/@expo/cli/build/src/start/startAsync.js
+index c568bc0..11ba8eb 100644
+--- a/node_modules/@expo/cli/build/src/start/startAsync.js
++++ b/node_modules/@expo/cli/build/src/start/startAsync.js
+@@ -154,6 +154,7 @@ async function startAsync(projectRoot, options, settings) {
+     // Present the Terminal UI.
+     if ((0, _interactive.isInteractive)()) {
+         await (0, _profile.profile)(_startInterface.startInterfaceAsync)(devServerManager, {
++            appId: options?.appId,
+             platforms: exp.platforms ?? [
+                 "ios",
+                 "android",

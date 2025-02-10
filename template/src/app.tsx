@@ -13,7 +13,7 @@ import { useDidMount } from '@hooks';
 import { AppContainer } from '@navigation/app-container';
 import { store } from '@store/store';
 import { useLoadFont } from '@theme/typography';
-import I18n from '@utils/i18n/i18n';
+import I18n from '@utils/i18n';
 import './app/themes/index';
 
 /**

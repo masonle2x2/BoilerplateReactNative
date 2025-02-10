@@ -31,14 +31,14 @@ const uninstallOldApp = bundleId => {
 const run = ({ envPath }) => {
   const envJson = getEnvJsonFromPath(envPath);
 
-  const simulator = 'iPhone 15 Pro Max';
+  const simulator = 'iPhone 16';
 
   const udid = bootDevice(simulator);
 
   uninstallOldApp(envJson.public.BUNDLE_IDENTIFIER);
 
   execSync(
-    `npx expo run:ios --appId ${envJson.public.BUNDLE_IDENTIFIER} --scheme ${envJson.public.WORKSPACE_NAME}-${envJson.public.SCHEME_SUFFIX} --device ${udid}`,
+    `npx expo run:ios --app-id ${envJson.public.BUNDLE_IDENTIFIER} --scheme ${envJson.public.WORKSPACE_NAME}-${envJson.public.SCHEME_SUFFIX} --device ${udid}`,
     { stdio: 'inherit' },
   );
 };

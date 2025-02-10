@@ -25,7 +25,7 @@ const run = ({ buildType, envPath }) => {
     }
   }
   execSync(
-    `npx expo run:android --variant ${variant} --appId=${envJson.public.BUNDLE_IDENTIFIER}`,
+    `npx expo run:android --variant ${variant} --app-id=${envJson.public.BUNDLE_IDENTIFIER}`,
     { stdio: 'inherit' },
   );
 };

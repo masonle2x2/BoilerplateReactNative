@@ -89,20 +89,6 @@ import Keys from 'react-native-keys';
   return envJson;
 };
 
-const getRubyVersion = () => {
-  try {
-    return Number(
-      execSync('ruby -e "puts RUBY_VERSION"')
-        .toString()
-        .trim()
-        .split('.')
-        .join(''),
-    );
-  } catch {
-    return 0;
-  }
-};
-
 const getAndroidHome = () => {
   try {
     return (
@@ -117,6 +103,5 @@ const getAndroidHome = () => {
 module.exports = {
   getAndroidHome,
   getEnvJsonFromPath,
-  getRubyVersion,
   setupEnv,
 };

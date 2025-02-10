@@ -26,8 +26,8 @@ UnistylesRegistry.addThemes({
   dark: darkTheme,
   light: lightTheme,
 }).addConfig({
-  adaptiveThemes: false,
-  initialTheme: 'light',
+  adaptiveThemes: true,
+  // initialTheme: 'light',
 });
 
 declare module 'react-native-unistyles' {

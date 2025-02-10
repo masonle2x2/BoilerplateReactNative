@@ -3,15 +3,15 @@
 # Setup
 
 - Setup development environment [React Native CLI](https://reactnative.dev/docs/environment-setup)
-- Node version >= 18 (recommended use [fnm](https://github.com/Schniz/fnm))
+- Node version >= 20 (recommended use [fnm](https://github.com/Schniz/fnm))
 - We recommended to use [yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable) or [bun](https://bun.sh/)
-- Ruby version: 2.7.6 (recommended use [rbenv](https://github.com/rbenv/rbenv))
+- Ruby version: 3.2.2 (recommended use [rbenv](https://github.com/rbenv/rbenv))
 
 > Xcode run failed with status 127
 >
 > This error occurs when xcode cannot access node. Xcode use .bash_profile, so add PATH to .bash_profile.
 
-Example ```.bash_profile```:
+Example `.bash_profile`:
 
 ```
   if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
@@ -19,27 +19,27 @@ Example ```.bash_profile```:
   export PATH=$PATH:/usr/local/bin
 ```
 
-> Remember add ```source ~/.bash_profile``` to top of ```Pre-actions``` in xcode scheme
+> Remember add `source ~/.bash_profile` to top of `Pre-actions` in xcode scheme
 
 # Importance before commit
 
->### <strong>You must fix all bug of ESLint </strong>
+> ### <strong>You must fix all bug of ESLint </strong>
 
->### <strong>You must config git Username/Email</strong>
+> ### <strong>You must config git Username/Email</strong>
 
 # Command
 
-> <strong>Before run script, you must navigate to your project</strong> :``` cd <your_project_folder> ```
+> <strong>Before run script, you must navigate to your project</strong> :`cd <your_project_folder>`
 
-- Install dependencies: ``` yarn ```
-- Run Android: ``` yarn android:dev ``` (dev/prod by default)
-- Run IOS: ``` yarn ios:dev ``` (dev/prod by default)
-- Start server: ``` yarn start ```
-- Install library then pods IOS: ``` yarn add <your_library> ```
+- Install dependencies: `yarn`
+- Run Android: `yarn android:dev` (dev/prod by default)
+- Run IOS: `yarn ios:dev` (dev/prod by default)
+- Start server: `yarn start`
+- Install library then pods IOS: `yarn add <your_library>`
 - Change splash logo
   - Step 1: Get file .PNG to change then rename it to splash.PNG
   - Step 2: Copy and pate to splash folder
-  - Step 3: Run command: ``` yarn splash ```
+  - Step 3: Run command: `yarn splash`
   -
 - ...
 
@@ -47,24 +47,24 @@ Example ```.bash_profile```:
 
 ## Base config (Now u can config on env)
 
-- Change App name ``` APP_DISPLAY_NAME ``` on ``` env/(dev.json/.prod) ```
-- Change App id ``` BUNDLE_IDENTIFIER ``` on ``` env/(dev.json/.prod) ```
-- Change App version ``` VERSION_NAME ``` on ``` env/(dev.json/.prod) ```
-- Change App build number ``` VERSION_CODE ``` on ``` env/(dev.json/.prod) ```
-- Change App URL ``` API_URL ``` on ``` env/(dev.json/.prod) ```
+- Change App name `APP_DISPLAY_NAME` on `env/(dev.json/.prod)`
+- Change App id `BUNDLE_IDENTIFIER` on `env/(dev.json/.prod)`
+- Change App version `VERSION_NAME` on `env/(dev.json/.prod)`
+- Change App build number `VERSION_CODE` on `env/(dev.json/.prod)`
+- Change App URL `API_URL` on `env/(dev.json/.prod)`
 
 ### Gen app icon and Change app icon by env
 
 Build with: [rn-ml](https://github.com/ngocle2497/cli-tools)
 
 - Update app icon file from appicon folder
-- Run: ``` yarn app-icon ``` or ``` yarn app-icon:dev ```
+- Run: `yarn app-icon` or `yarn app-icon:dev`
   - Android: auto change flavor script
   - IOS: Change ASSETCATALOG_COMPILER_APPICON_NAME to your respective App Icon Assets (in respective env file)
 
 # Environment
 
->### Create new Environment
+> ### Create new Environment
 
 Ex: New Environment named: Demo
 
@@ -115,7 +115,7 @@ Ex: New Environment named: Demo
 
 - ## Setup Android/IOS
 
->## This project use [react-native-keys](https://github.com/numandev1/react-native-keys) to switch env
+> ## This project use [react-native-keys](https://github.com/numandev1/react-native-keys) to switch env
 
 - ### Android
 
@@ -143,12 +143,12 @@ Ex: New Environment named: Demo
       source ~/.bash_profile
       ENV_PATH="env/dev.json"
       export KEYSFILE=$ENV_PATH
-      
+
       "${SRCROOT}/../node_modules/react-native-keys/keysIOS.js"
-      
+
       "${SRCROOT}/../scripts/prepare.js" "$ENV_PATH"
-      
-      ```
+
+    ```
 
 ## Caution
 

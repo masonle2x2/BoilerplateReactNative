@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { DefaultButton } from '@components/button/default-button';
-import { useTranslation } from '@hooks';
 import { AnimatedText, AnimatedView, View } from '@rn-core';
 
 import { TabItemProps } from './type';
@@ -13,7 +13,7 @@ export const TabItem = ({ tab, index, selectedIndex }: TabItemProps) => {
   // state
   const { styles, theme } = useStyles(styleSheet);
 
-  const t = useTranslation();
+  const [t] = useTranslation();
 
   // func
   const handlePress = () => {
